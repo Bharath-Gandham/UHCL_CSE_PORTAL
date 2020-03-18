@@ -17,7 +17,6 @@ export class NavigationBarComponent implements OnInit {
   constructor(private auth:AngularFireAuth, private authservice:MsalService, private db:AngularFirestore, private authorizationService:AuthorizationServiceService) { 
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
       this.loggedInUserDataFromDB = data;
-      console.log("in nav bar",this.loggedInUserDataFromDB);
     });
   }
 

@@ -7,7 +7,7 @@
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Subject">
   </mat-form-field>
 </div>
-    <table mat-table [dataSource]="meetings" class="datatable mat-elevation-z8 text-center">
+    <table mat-table [dataSource]="meetings" class="datatable mat-elevation-z8 text-center pointer">
   
       <!--- Note that these columns can be defined in any order.
             The actual rendered columns are set as a property on the row definition" -->
@@ -55,7 +55,7 @@
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getMeeting(row)"></tr>
-    </table>    
+    </table> 
   </div>
   <!--<h6 *ngFor="let item of element.agendaList">{{item.id}}.{{item.agenda}} </h6>-->
   <p-overlayPanel #op>

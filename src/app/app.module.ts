@@ -7,10 +7,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 //import below for login using microsoft
 import { AngularFireAuthModule } from "@angular/fire/auth";
+import {AngularFireStorageModule} from '@angular/fire/storage';
 //import below for routing
 import { RouterModule } from '@angular/router';
 //Import below for forms working
-import {FormsModule} from '@angular/forms'
+import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 //Import this below lines to use fireDb related things
 import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule, AngularFireDatabase} from 'angularfire2/database'
@@ -27,12 +28,17 @@ import {MatSortModule} from '@angular/material/sort';
 //Import for angular material datepicker API
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material';
+//import for multiselect
+import {MatSelectModule} from '@angular/material/select';
 //import {MatMomentDateModule} from '@angular/material-moment-adapter';
 //import for mat-label API
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material';
 //importing prime ng
 import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
+import {MultiSelectModule} from 'primeng/multiselect';
 //import for browswe animations module
 import { CreateMeetingComponent } from './create-meeting/create-meeting.component';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
@@ -56,18 +62,22 @@ import {MsalModule, MsalGuard} from '@azure/msal-angular';
 
     BrowserModule,
     AppRoutingModule,
+
     //import below for popup window
     //PopupModule.forRoot(),
     //import below for working with forms
     FormsModule,
+    ReactiveFormsModule,
     //Use the below lines for using firedb
     AngularFireModule.initializeApp(environment.fireBase),//Basic module. 
     /*If we want Angular fire authentication, angualr fire database 
      and all we need some other modules*/
     AngularFireDatabaseModule,
     AngularFirestoreModule,
+    AngularFireStorageModule,
     //import for angular tables
     MatTableModule,
+    
     //import for sorting
     MatSortModule,
     //Import for angular material datepicker
@@ -77,10 +87,14 @@ import {MsalModule, MsalGuard} from '@azure/msal-angular';
     //import for mat-label API
     MatFormFieldModule,
     MatInputModule,
+    //import for multiselect
+    MatSelectModule,
     //import for browser animations
     BrowserAnimationsModule,
     //importing prime ng model
     OverlayPanelModule,
+    ConfirmDialogModule,
+    MultiSelectModule,
     AngularFireAuthModule,
     //import for microsoft auth
     MsalModule.forRoot({
@@ -90,14 +104,14 @@ import {MsalModule, MsalGuard} from '@azure/msal-angular';
   }),
     RouterModule.forRoot([
       {path:'',component:HomeComponentComponent,canActivate: [MsalGuard]},
-      {path:'Users',component:UserListComponent},
+      {path:'Users',component:UserListComponent,canActivate: [MsalGuard]},
       {path:'DetailedMeeting',component:DetailedMeetingComponent},
-      {path:'MeetingsList',component:MeetingsListComponent},
+      {path:'MeetingsList',component:MeetingsListComponent,canActivate: [MsalGuard]},
       {path:'CreateMeeting',component:CreateMeetingComponent},
       {path:'AddMeetingMinutes',component:AddMeetingMinutesComponent}
     ])
   ],
-  providers: [MatDatepickerModule,MeetingService],
+  providers: [MatDatepickerModule,MeetingService,ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

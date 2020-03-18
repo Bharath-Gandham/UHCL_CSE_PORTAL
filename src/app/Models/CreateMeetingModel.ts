@@ -18,8 +18,21 @@ export class CreateMeetingModel{
     inlineCheckbox3:boolean;
     inlineCheckbox4:boolean;
     inlineCheckbox5:boolean;
-    approvals:any=[];
-    rejects:any=[];
+    approvals:any[];
+    rejects:any[];
+    comments:any;
+    documentIdOfCurrentMeeting:string;
+    finalised:boolean;
+    files:string[];
+    operation:string;
+    attendees:string[]=[];
+  //downloadFiles:any;
+  downloadFiles: any[] = [
+    {
+      uniqueNameForReference: "",
+      linkToView: ""
+    }
+  ];
     constructor(){
        
 

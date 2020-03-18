@@ -1,1 +1,2 @@
-<h1>Welcome to UHCL Application</h1>
+<h1 *ngIf="loggedInUserDataFromDB.Role=='Admin' || loggedInUserDataFromDB.Role=='Faculty' || loggedInUserDataFromDB.Role=='Chair'">Welcome to UHCL-CSE Portal</h1>
+<h6 *ngIf="loggedInUserDataFromDB.Role!='Admin' && loggedInUserDataFromDB.Role!='Faculty' && loggedInUserDataFromDB.Role!='Chair'">You are an Unauthorized user please logout of the application</h6>

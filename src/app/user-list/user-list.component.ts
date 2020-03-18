@@ -4,6 +4,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
+import {ConfirmationService} from 'primeng/api';
+import { AuthorizationServiceService } from '../Services/authorization-service.service';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -12,12 +14,13 @@ import {MatSort} from '@angular/material/sort';
 export class UserListComponent implements OnInit {
   users:MatTableDataSource<any>;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  roles=['Faculty','chair','Admin'];
+  roles=['Admin','Faculty','Chair','Admission','Waiver'];
   departments=['CS','CIS','IT','DS'];
   showAddUserForm:boolean;
   showUpdateUserForm:Boolean;
   editClicked:boolean=false;
   title = 'myFirstDemoForFireDB';
+  usersEmailIdsForValidation:string[]=[];
   tempUser:any = {};
   // dataq:any[] = [
   //   {firstName:'hi',lastName:'ji',Role:'tt',emailId:'re',department:'ee'}
@@ -26,12 +29,20 @@ export class UserListComponent implements OnInit {
   //Below is for database coulmn names
   displayedColumns: string[] = ['Action','firstName', 'lastName', 'Role', 'emailId','department'];
   addUserObject=new User();
-  constructor (private db:AngularFirestore){
+  loggedInUserDataFromDB: any= null;
+  constructor (private db:AngularFirestore,private confirmationService: ConfirmationService,private authorizationService: AuthorizationServiceService){
     //this.users = new MatTableDataSource(this.dataq);
     //this.users.sort = this.sort;
+    this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
+      this.loggedInUserDataFromDB = data;
+      //console.log("in nav bar",this.loggedInUserDataFromDB);
+    });
     db.collection("Users").valueChanges().subscribe(data=>
       {
         console.log(data);
+        for(let i=0;i<data.length;i++){
+          this.usersEmailIdsForValidation.push(data[i]['emailId'])
+        }
         this.users=new MatTableDataSource(data);
         this.users.sort = this.sort;
     });
@@ -70,6 +81,10 @@ export class UserListComponent implements OnInit {
   
   }*/
   deleteUser(presentUser){
+    this.confirmationService.confirm({
+      message: 'Are you sure, do you want to delete this record?',
+      header:presentUser.firstName+" "+presentUser.lastName,
+      accept: () => {
 this.db.collection("Users").doc(presentUser.emailId).delete()
 .then(function(){
   console.log("Document Successfull deleted!");
@@ -78,6 +93,8 @@ this.db.collection("Users").doc(presentUser.emailId).delete()
     console.error("Error removing document:",error);
   }
 );
+}
+});
   }
   cancel(){
     this.showAddUserForm=!this.showAddUserForm;

@@ -113,31 +113,72 @@
     && !createMeetingModelObject.inlineCheckbox5)">*Program is required
     </div>
     <div class="form-group">
-      <label for="exampleFormControlInput1"> Agenda List</label>
-      <div class ="row" *ngFor="let item of items">
-        <div class="col-md-10">
-          <label for="exampleFormControlInput1"> Agenda</label>
-        <input required #itemId="ngModel" [(ngModel)]="item.agenda" name="{{item.id}}agenda" type="text" class="form-control"
-         placeholder="Input Agenda">
+      <label for="exampleFormControlInput1"> Agenda</label>
+      <!--Looping into Agenda Main Array-->
+      <div class ="row" *ngFor="let item of items; index as j">
+        <div class="col-md-9">
+          <label for="exampleFormControlInput1"> Agenda item</label>
+        <textarea required #itemId="ngModel" [(ngModel)]="item.agenda" name="{{item.id}}agenda" type="text" class="form-control"
+         placeholder="Input Agenda" rows=1></textarea>
+
+         <div class="alert alert-danger"
+          *ngIf="(itemId.touched && item.agenda=='')">*Agenda Item is required
+          </div>
+
+           <!--Looping into subAgenda Array-->
+          <div class="row" *ngFor="let subItem of subagendaItemsarray[j];index as i">     
+           <div class="container">
+            <label class='px-3'>Sub Agenda Item</label>
+             <div class="d-flex px-3">
+              <textarea [(ngModel)]="subItem.subAgenda" name="{{j}}{{i}}subAgendaItem" type= "text" class="form-control" 
+              placeholder="Input Agenda Subitem" rows="1"></textarea>
+            <div class="d-flex align-items-center ml-2"> 
+              <i class="m-2 far fa-trash-alt" (click)=deleteSubAgendaItem(item,subItem)></i>
+              <i class="fas fa-plus" (click)=addSubSubAgendaItem(item,subItem)></i>
+            </div>  
+          </div>    
+          </div>
+        
+         <!--Looping into subOfSubAgenda Array-->
+            <div  class='ml-4' *ngFor="let subOfSubItem of subItem.subOfSubAgendaItems;index as k">  
+              <div class="container">
+              <label class='styleForTextArea'>Sub of Sub Agenda Item</label>
+              <div class="d-flex">
+              <textarea [(ngModel)]="subOfSubItem.subofSubAgenda" name="{{j}}{{i}}{{k}}subOfSubAgendaItem" type= "text" class="form-control " 
+              placeholder="Input Agenda SubofSubitem" rows="1"></textarea>
+              <div class="d-flex ml-2">
+              <i class="m-2 far fa-trash-alt" (click)=deleteSubOfSubAgendaItem(j,i,subOfSubItem)></i>
+              </div>
+            </div>
+            </div>
+          </div> 
+          </div>
         </div>
          <div class="col-md-2">
          <label for="exampleFormControlSelect1">Duration(in minutes):</label>
-        <select [(ngModel)]="item.duration" name="{{item.id}}duration" class="form-control">
-          <option *ngFor="let time of [5,10,15,20,25,30]">{{time}}</option>
+        <select required #durationForAgendaItem="ngModel" [(ngModel)]="item.duration" name="{{item.id}}duration" class="form-control">
+          <option *ngFor="let time of ['05','10','15','20','25','30']">{{time}}</option>
         </select>
-      </div>
-         <div class="alert alert-danger"
-          *ngIf="(itemId.touched && item.agenda=='')">*Agenda is required
-          </div>
-          
+        <!--<div class="alert alert-danger"
+          *ngIf="(durationForAgendaItem.touched && !(durationForAgendaItem=='O5'))">*Duration is required
+          </div>-->
+        </div>
+        <div class="col-md-1">
+          <label>Action:</label>
+        <i class="m-2 far fa-trash-alt" (click)=deleteAgendaItem(item)></i>
+        <i class="fas fa-plus" (click)=addNewSubAgendaItem(item)></i>
+        </div>
         </div>
         <button (click)=newAgendaItem()>Add</button>
         <button (click)=cancelAgendaItemInput()>Cancel</button>
         
     </div>
-  </form>
-  <div>
-    <button  class="btn btn-primary" (click)="submitToSaveMeeting()">Save</button>
+    <button [disabled]="!subject.valid || !date.valid || !HH.valid || !MM.valid || !noon.valid || !hostedBy.valid || (!createMeetingModelObject.inlineCheckbox1 && !createMeetingModelObject.inlineCheckbox2
+    &&!createMeetingModelObject.inlineCheckbox3 && !createMeetingModelObject.inlineCheckbox4
+    && !createMeetingModelObject.inlineCheckbox5)" class="btn btn-primary" (click)="submitToSaveMeeting()">Save</button>
     <button  class="btn" (click)="cancel()">cancel</button>
-  </div>
+  </form>
+  
 </div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+

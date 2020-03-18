@@ -24,7 +24,6 @@ displayedColumns: string[] = ['Subject', 'Date','Time','Duration', 'Department',
     });
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
       this.loggedInUserDataFromDB = data;
-      console.log("in nav bar",this.loggedInUserDataFromDB);
     });
    }
    getMeeting(meet){ 
@@ -33,6 +32,7 @@ displayedColumns: string[] = ['Subject', 'Date','Time','Duration', 'Department',
     
    }
    createMeeting(){
+     
      this.route.navigate(['CreateMeeting']);
    }
    applyFilter(event: Event) {

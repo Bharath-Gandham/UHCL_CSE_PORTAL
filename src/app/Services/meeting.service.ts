@@ -13,7 +13,7 @@ selectedMeetingSubjectForEditingMeeting:BehaviorSubject<any>=new BehaviorSubject
   setDataFromMeetingList(selectedMeeting){
 this.selectedMeeting = selectedMeeting;
 //opening and putting data
-console.log(this.selectedMeeting);
+//console.log(this.selectedMeeting);
 this.selectedMeetingSubject.next(this.selectedMeeting);
 this.selectedMeetingSubjectForEditingMeeting.next(this.selectedMeeting);
   }

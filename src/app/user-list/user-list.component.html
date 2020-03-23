@@ -114,7 +114,7 @@
 
 <!--Throwing Error Message if user hardcode's link in the google url tab-->
 <div *ngIf="loggedInUserDataFromDB.Role=='Faculty' || loggedInUserDataFromDB.Role=='Chair'">
-  <h4 style="color: red;" class="px-4">!You are not authorized to view this page</h4>
+  <h4 style="color: red;" class="px-4">*You do not have access</h4>
 </div>
 <!--
       [disabled]="firstName.valid||lastName.valid||email.valid||role.valid||department.valid"

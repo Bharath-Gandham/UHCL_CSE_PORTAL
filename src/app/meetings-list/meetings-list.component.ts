@@ -17,7 +17,7 @@ meetings:any;
 loggedInUserDataFromDB:any=null;
 //detailedMeetingComponentObject=new DetailedMeetingComponent();
 agendaList:any[];
-displayedColumns: string[] = ['Subject', 'Date','Time','Duration', 'Department', 'HostedBy','AgendaList'];
+displayedColumns: string[] = ['Subject', 'Date','Time','Duration', 'Department', 'facilitatedBy','AgendaList'];
   constructor(private db1:AngularFirestore, private meetingService:MeetingService, private route:Router, private authorizationService:AuthorizationServiceService){
     db1.collection("Meetings").valueChanges().subscribe(data=>
       {this.meetings=new MatTableDataSource(data);

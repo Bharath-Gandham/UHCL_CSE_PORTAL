@@ -9,6 +9,10 @@ import {ConfirmationService} from 'primeng/api';
 import {MultiSelect} from 'primeng/multiselect';
 import {FormControl} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
+import { HttpClient } from '@angular/common/http';
+
+import { DomSanitizer } from '@angular/platform-browser';
+import { FileService } from '../Services/file.service';
 @Component({
   selector: 'app-detailed-meeting',
   templateUrl: './detailed-meeting.component.html',
@@ -32,14 +36,14 @@ export class DetailedMeetingComponent implements OnInit {
   dataForAttendance=[];
   //attendees:string[]=[];
   //allSelected: any;
-  constructor(private meetingService: MeetingService, private storage: AngularFireStorage, private route: Router, private db: AngularFirestore, private authorizationService: AuthorizationServiceService, private confirmationService: ConfirmationService) {
+  constructor(private meetingService: MeetingService, private storage: AngularFireStorage, private route: Router, private db: AngularFirestore, private authorizationService: AuthorizationServiceService, private confirmationService: ConfirmationService, private http:HttpClient, private sanitizer:DomSanitizer, private fileService:FileService) {
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
       this.loggedInUserDataFromDB = data;
       //console.log("in nav bar",this.loggedInUserDataFromDB);
     });
     db.collection("Users").valueChanges().subscribe(data=>
       {
-        console.log(data);
+        //console.log(data);
         this.dataForAttendance=data
     });
   }
@@ -47,23 +51,30 @@ export class DetailedMeetingComponent implements OnInit {
   ngOnInit() {
     this.meetingService.getSelectedMeetingObj().subscribe(data => {
       this.selectedMeeting = data;
+      if(this.selectedMeeting!=null){
       this.comment = this.selectedMeeting['comments'][this.loggedInUserDataFromDB.emailId];
       this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).valueChanges().subscribe(data => this.agendaList = data['wholeAgendaList']);
       //console.log(this.selectedMeeting);
+      }
     });
     //this.selectedMeeting.attendees=[];
     //this.downloadURL = this.storage.ref('gs://myfirstdemoforfiredb.appspot.com/bv3556dcnpe14ej6fa1').getDownloadURL();
   }
   showAddMeetingMinutesForm() {
-    console.log(this.agendaList);
+    //console.log(this.agendaList);
     this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).update({ wholeAgendaList: this.agendaList });
     //this.route.navigate(['AddMeetingMinutes']);
   }
   finaliseMeetingMinutes() {
+    this.confirmationService.confirm({
+      message: 'Are you sure, do you want to Finalise this Meeting?(You cannot perform any action like edit and delete anymore)',
+      header:"Finalise?",
+      accept: () => { 
     //this.finalised=true;
     this.selectedMeeting.finalised = true;
     this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).update({ finalised: true })
-
+      }
+  });
   }
 
   rejectButtonClicked() {
@@ -116,15 +127,16 @@ export class DetailedMeetingComponent implements OnInit {
     randomId = randomId + timeStamp;
     // randomId=randomId+
     this.storage.upload(randomId, event.target.files[0]).snapshotChanges().subscribe(data => {
-      console.log("console.log",data);
+      //console.log("console.log",data);
       this.storage.ref(randomId).getDownloadURL().subscribe(data=>{
         if(data!=null){
           let downloadUrl = data;
           //this.selectedMeeting.downloadFiles[randomId]=downloadUrl;
-          console.log(this.selectedMeeting.downloadFiles);
+          //console.log(this.selectedMeeting.downloadFiles);
           this.selectedMeeting.downloadFiles.push({
             uniqueNameForReference:randomId,
-            linkToView:downloadUrl
+            linkToView:downloadUrl,
+            typeOfFile:event.target.files[0].type
           })
           this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).update({ downloadFiles: this.selectedMeeting.downloadFiles });
         }
@@ -135,14 +147,14 @@ export class DetailedMeetingComponent implements OnInit {
     //console.log(downloadUrl,this.selectedMeeting);
     
     
-    // console.log(event.target.files[0]);
+     //console.log(event.target.files[0].type);
   }
   deleteFile(ref1,i){
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to delete this File?',
       header:ref1,
       accept: () => { 
-    console.log(ref1,i);
+    //console.log(ref1,i);
     var deleteRef = this.storage.ref(ref1)
 
     // Delete the file
@@ -158,6 +170,29 @@ export class DetailedMeetingComponent implements OnInit {
 });
 
   }
+  downloadFile(uniqueNameForReference,linkToView,typeOfFile){
+ this.fileService.setHttpRequestToDownloadFile(uniqueNameForReference,linkToView,typeOfFile);
+  //   console.log(linkToView);
+  // this.http.get(linkToView,{responseType: 'blob' })
+  //  .subscribe(data => {
+  //   const blob = new Blob([data], { type: 'text' })
+  //   saveAs(blob,"filename");
+
+  //});
+
+
+  
+  
+  }
+  // downLoadFile(data: any, type: string) {
+  //   console.log('in download',data,type);
+  //   let blob = new Blob([data], { type: type});
+  //   let url = window.URL.createObjectURL(blob);
+  //   let pwa = window.open(url);
+  //   if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+  //       alert( 'Please disable your Pop-up blocker and try again.');
+  //   }
+  // }
   deleteMeeting() {
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to delete this record?',
@@ -187,6 +222,10 @@ export class DetailedMeetingComponent implements OnInit {
     // this.route.navigate(['CreateMeeting']);
     this.editingVariable=true;
   }
+  saveChanges(){
+    this.editingVariable=false;
+    this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).update({ subject: this.selectedMeeting.subject, date:this.selectedMeeting.date, time:this.selectedMeeting.time, duration:this.selectedMeeting.duration, facilitatedBy:this.selectedMeeting.facilitatedBy });
+  }
 open(url){
   window.open(url,"_blank");
 }
@@ -194,7 +233,7 @@ selectingAllForAttendance(){
   let arr = [];
   arr.push(true);
   this.dataForAttendance.forEach(element => {
-    console.log(element.emailId);
+    //console.log(element.emailId);
     arr.push(element.emailId);
     
   });
@@ -210,7 +249,7 @@ selectingAllForAttendance(){
       this.attendance.value.splice(indexf, 1);
      
     }
-  console.log("array",this.attendance.value); 
+  //console.log("array",this.attendance.value); 
 }
 updatingAttendanceToDataBase(){
   //console.log("MouseOUT");

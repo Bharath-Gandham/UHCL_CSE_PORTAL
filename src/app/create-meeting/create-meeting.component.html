@@ -68,11 +68,11 @@
     
     <div class="form-group">
       <label for="exampleFormControlInput1">Facilitated By</label>
-      <input required #hostedBy="ngModel" [(ngModel)]="createMeetingModelObject.hostedBy" name="hostedBy" type="text" class="form-control"
+      <input required #facilitatedBy="ngModel" [(ngModel)]="createMeetingModelObject.facilitatedBy" name="facilitatedBy" type="text" class="form-control"
         id="exampleFormControlInput1" placeholder="Input Facilitator">
     </div>
     <div class="alert alert-danger"
-    *ngIf="(hostedBy.touched && !hostedBy.valid)">*Facilitated by is required
+    *ngIf="(facilitatedBy.touched && !facilitatedBy.valid)">*Facilitated by is required
     </div>
     <div class="form-group">
       <label for="exampleFormControlInput1">programs: </label>
@@ -173,7 +173,7 @@
         <button (click)=cancelAgendaItemInput()>Cancel</button>
         
     </div>
-    <button [disabled]="!subject.valid || !date.valid || !HH.valid || !MM.valid || !noon.valid || !hostedBy.valid || (!createMeetingModelObject.inlineCheckbox1 && !createMeetingModelObject.inlineCheckbox2
+    <button [disabled]="!subject.valid || !date.valid || !HH.valid || !MM.valid || !noon.valid || !facilitatedBy.valid || (!createMeetingModelObject.inlineCheckbox1 && !createMeetingModelObject.inlineCheckbox2
     &&!createMeetingModelObject.inlineCheckbox3 && !createMeetingModelObject.inlineCheckbox4
     && !createMeetingModelObject.inlineCheckbox5)" class="btn btn-primary" (click)="submitToSaveMeeting()">Save</button>
     <button  class="btn" (click)="cancel()">cancel</button>

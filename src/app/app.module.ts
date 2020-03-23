@@ -40,12 +40,16 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {MultiSelectModule} from 'primeng/multiselect';
 //import for browswe animations module
+//omporting http module
+import { HttpClientModule } from '@angular/common/http';
 import { CreateMeetingComponent } from './create-meeting/create-meeting.component';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
 import { DetailedMeetingComponent } from './detailed-meeting/detailed-meeting.component';
 import { MeetingService } from './Services/meeting.service';
 import { AddMeetingMinutesComponent } from './add-meeting-minutes/add-meeting-minutes.component';
 import {MsalModule, MsalGuard} from '@azure/msal-angular';
+import { FileService } from './Services/file.service';
+import { NoaccessComponent } from './noaccess/noaccess.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +59,8 @@ import {MsalModule, MsalGuard} from '@azure/msal-angular';
     CreateMeetingComponent,
     MeetingsListComponent,
     DetailedMeetingComponent,
-    AddMeetingMinutesComponent
+    AddMeetingMinutesComponent,
+    NoaccessComponent
   ],
   imports: [
     
@@ -96,6 +101,8 @@ import {MsalModule, MsalGuard} from '@azure/msal-angular';
     ConfirmDialogModule,
     MultiSelectModule,
     AngularFireAuthModule,
+    //importing http module
+    HttpClientModule,
     //import for microsoft auth
     MsalModule.forRoot({
       clientID: "f1ac7d06-f07e-4a1a-96f7-428bc851cf15",
@@ -105,13 +112,13 @@ import {MsalModule, MsalGuard} from '@azure/msal-angular';
     RouterModule.forRoot([
       {path:'',component:HomeComponentComponent,canActivate: [MsalGuard]},
       {path:'Users',component:UserListComponent,canActivate: [MsalGuard]},
-      {path:'DetailedMeeting',component:DetailedMeetingComponent},
+      {path:'DetailedMeeting',component:DetailedMeetingComponent,canActivate: [MsalGuard]},
       {path:'MeetingsList',component:MeetingsListComponent,canActivate: [MsalGuard]},
-      {path:'CreateMeeting',component:CreateMeetingComponent},
-      {path:'AddMeetingMinutes',component:AddMeetingMinutesComponent}
+      {path:'CreateMeeting',component:CreateMeetingComponent,canActivate: [MsalGuard]},
+      {path:'NoAccess',component:NoaccessComponent}
     ])
   ],
-  providers: [MatDatepickerModule,MeetingService,ConfirmationService],
+  providers: [MatDatepickerModule,MeetingService,ConfirmationService,FileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

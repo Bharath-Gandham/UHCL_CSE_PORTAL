@@ -2,7 +2,7 @@ export class CreateMeetingModel{
     subject:string;
     date: string;
     formateddate:string;
-    hostedBy:string;
+    facilitatedBy:string;
     agendaList:string;
     department:string;
     HH:string;
@@ -30,7 +30,8 @@ export class CreateMeetingModel{
   downloadFiles: any[] = [
     {
       uniqueNameForReference: "",
-      linkToView: ""
+      linkToView: "",
+      typeOfFile:""
     }
   ];
     constructor(){

@@ -1,19 +1,21 @@
-<div class='container-fluid'>
+<div class='container-fluid' *ngIf="loggedInUserDataFromDB!=null && selectedMeeting!=null">
+    <div *ngIf="loggedInUserDataFromDB.Role=='Chair' || loggedInUserDataFromDB.Role=='Faculty'">
     
     <!--<div class="container" *ngIf="downloadURL | async; let url">
         <img [src]="url" alt="Image from AngularFireStorage">
       </div>-->
       <div *ngIf="loggedInUserDataFromDB.Role=='Chair'" class="float-right">
           <button [disabled]="selectedMeeting.finalised" (click)="deleteMeeting()">Delete Meeting</button>
-          <button [disabled]="selectedMeeting.finalised" (click)="editMeeting()">Edit Meeting</button>
+          <button [disabled]="selectedMeeting.finalised || editingVariable" (click)="editMeeting()">Edit Meeting</button>
+          <button [disabled]="selectedMeeting.finalised || !editingVariable" (click)="saveChanges()">Save Changes</button>
       </div>
 
-    <h3>Subject:<input [(ngModel)]="selectedMeeting.subject" [ngClass]="{styleForInput:!editingVariable}" [readonly]="!editingVariable" type="text"></h3>
-    <h6>Date:<input [(ngModel)]="selectedMeeting.date" [ngClass]="{styleForInput:!editingVariable}" [readonly]="!editingVariable" type="text"></h6>
-    <h6>Time:<input [(ngModel)]="selectedMeeting.time" [ngClass]="{styleForInput:!editingVariable}" [readonly]="!editingVariable" type="text"></h6>
-    <h6>Duration:<input [(ngModel)]="selectedMeeting.duration" [ngClass]="{styleForInput:!editingVariable}" [readonly]="!editingVariable" type="text"></h6>
+    <h3>Subject:<input [(ngModel)]="selectedMeeting.subject" [ngClass]="{styleForInput:!editingVariable || selectedMeeting.finalised}" [readonly]="!editingVariable || selectedMeeting.finalised" type="text"></h3>
+    <h6>Date:<input [(ngModel)]="selectedMeeting.date" [ngClass]="{styleForInput:!editingVariable || selectedMeeting.finalised}" [readonly]="!editingVariable || selectedMeeting.finalised" type="text"></h6>
+    <h6>Time:<input [(ngModel)]="selectedMeeting.time" [ngClass]="{styleForInput:!editingVariable || selectedMeeting.finalised}" [readonly]="!editingVariable || selectedMeeting.finalised" type="text"></h6>
+    <h6>Duration:<input [(ngModel)]="selectedMeeting.duration" [ngClass]="{styleForInput:!editingVariable || selectedMeeting.finalised}" [readonly]="!editingVariable || selectedMeeting.finalised" type="text"></h6>
     <h6>Department:{{selectedMeeting.department}}</h6>
-    <h6>Facilitated by:<input [(ngModel)]="selectedMeeting.hostedBy" [ngClass]="{styleForInput:!editingVariable}" [readonly]="!editingVariable" type="text"></h6>
+    <h6>Facilitated by:<input [(ngModel)]="selectedMeeting.facilitatedBy" [ngClass]="{styleForInput:!editingVariable || selectedMeeting.finalised}" [readonly]="!editingVariable || selectedMeeting.finalised" type="text"></h6>
     <h6>Agenda List: </h6>
     <!--Looping into AgendaList-->
     <div *ngFor="let item of agendaList;index as i">
@@ -80,7 +82,7 @@
               <mat-option  *ngFor="let selectedUser of dataForAttendance;index as i" [value]='selectedUser.emailId'>{{selectedUser.firstName}} {{selectedUser.lastName}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <button (click)=updatingAttendanceToDataBase()>Save Attendance</button>
+          <button [disabled]="selectedMeeting.finalised" (click)=updatingAttendanceToDataBase()>Save Attendance</button>
           <h6>Attendees:</h6>
           <p *ngFor="let attendee of selectedMeeting.attendees ; index as i">{{i+1}}. {{attendee}}</p>
           <!--<p-multiSelect [options]="dataForAttendance" [(ngModel)]="selectedMeeting.attendees" [panelStyle]="{minWidth:'12em'}">
@@ -103,9 +105,21 @@
     <i (click)=deleteFile(file.key,i) class="far fa-times-circle"></i>
     </div> -->
     <div *ngFor="let file of selectedMeeting.downloadFiles ;index as i">
-        {{i+1}}.{{file.uniqueNameForReference}}: Click <a href="#" (click)=open(file.linkToView)>here</a> to view
+        {{i+1}}.{{file.uniqueNameForReference}}: Click <a style="color:#0000FF;" (click)=open(file.linkToView)>here</a> to view
         <i *ngIf="loggedInUserDataFromDB.Role=='Chair'" (click)=deleteFile(file.uniqueNameForReference,i) class="far fa-times-circle"></i>
+        <i class="fas fa-file-download ml-3" (click)=downloadFile(file.uniqueNameForReference,file.linkToView,file.typeOfFile)></i>
         </div>
-    <input *ngIf="loggedInUserDataFromDB.Role=='Chair'" type="file" (change)="uploadFile($event)" accept=".txt,.jpg,.pdf">
+    <input *ngIf="loggedInUserDataFromDB.Role=='Chair'" type="file" (change)="uploadFile($event)" accept=".txt,.pdf,.doc,.docx">
 </div>
+
 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+</div>
+<div *ngIf="loggedInUserDataFromDB!=null && loggedInUserDataFromDB.Role=='Admin'">
+    <h4 style="color: red;" class="px-4">*You do not have access</h4>
+  </div>
+<div *ngIf="loggedInUserDataFromDB!=null && (loggedInUserDataFromDB.Role=='Chair' || loggedInUserDataFromDB.Role=='Faculty') && selectedMeeting==null">
+    <h4 style="color: red;" class="px-4">*No meeting is selected</h4>
+</div>
+
+

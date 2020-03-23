@@ -100,7 +100,7 @@ console.log(this.items);
         date: this.createMeetingModelObject.formateddate,
         time: this.createMeetingModelObject.time,
         duration: this.createMeetingModelObject.duration,
-        hostedBy: this.createMeetingModelObject.hostedBy,
+        facilitatedBy: this.createMeetingModelObject.facilitatedBy,
         department: this.createMeetingModelObject.departmentList,
         agendaList: this.itemsArray,
         approvals: [],

@@ -1,3 +1,4 @@
+<div *ngIf="loggedInUserDataFromDB!=null">
 <div *ngIf="loggedInUserDataFromDB.Role=='Admin'">
 <button type="button" class="btn btn-primary float-right" (click)="addUser()">Add user</button>
 
@@ -87,7 +88,7 @@
      <!-- <div *ngFor="let emailIterator of usersEmailIdsForValidation">
       <div class="alert alert-danger" *ngIf="emailIterator==addUserObject.email">*Email id is already taken</div>
     </div>-->
-    <div class="alert alert-danger" *ngIf="usersEmailIdsForValidation.includes(addUserObject.email)">*Email id is already taken</div>
+    <div class="alert alert-danger" *ngIf="email.touched && usersEmailIdsForValidation.includes(addUserObject.email)">*Email id is already taken</div>
     </div>
     <div class="form-group">
       <label for="exampleFormControlSelect1">Role</label>
@@ -105,7 +106,7 @@
       </select>
       <div class="alert alert-danger" *ngIf="(department.touched && !department.valid)">*Department is required</div>
     </div>
-    <button [disabled]="!firstName.valid || !lastName.valid || !email.valid || !role.valid || !department.valid || usersEmailIdsForValidation.includes(addUserObject.email)" *ngIf="showAddUserForm" class="btn btn-primary" (click)="submitToSaveUser()">Save</button>
+    <button [disabled]="!firstName.valid || !lastName.valid || !email.valid || !role.valid || !department.valid || (email.touched && usersEmailIdsForValidation.includes(addUserObject.email))" *ngIf="showAddUserForm" class="btn btn-primary" (click)="submitToSaveUser()">Save</button>
     <button *ngIf="showAddUserForm" class="btn" (click)="cancel()">cancel</button>
   </form>
   <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
@@ -115,6 +116,7 @@
 <!--Throwing Error Message if user hardcode's link in the google url tab-->
 <div *ngIf="loggedInUserDataFromDB.Role=='Faculty' || loggedInUserDataFromDB.Role=='Chair'">
   <h4 style="color: red;" class="px-4">*You do not have access</h4>
+</div>
 </div>
 <!--
       [disabled]="firstName.valid||lastName.valid||email.valid||role.valid||department.valid"

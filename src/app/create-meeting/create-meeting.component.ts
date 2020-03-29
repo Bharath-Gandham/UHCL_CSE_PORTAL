@@ -4,6 +4,7 @@ import { CreateMeetingModel } from "../Models/CreateMeetingModel";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { MeetingService } from '../Services/meeting.service';
 import {ConfirmationService} from 'primeng/api';
+import { AuthorizationServiceService } from '../Services/authorization-service.service';
 
 @Component({
   selector: "app-create-meeting",
@@ -12,7 +13,7 @@ import {ConfirmationService} from 'primeng/api';
 })
 export class CreateMeetingComponent implements OnInit {
   showCreateMeetingForm: boolean;
-
+chairs:any[]=[];
   disableCheckBox: boolean = false;
   showAddAgendaItem: boolean;
   lblToThrowDepartmentNotSelectedError: boolean;
@@ -45,10 +46,28 @@ export class CreateMeetingComponent implements OnInit {
   };
   itemsArray: string[] = [];
   selectedMeeting: CreateMeetingModel;
+  loggedInUserDataFromDB: any;
   //subAgendaItems: any[];
   //subOfSubAgendaItems: any[][];
   //selectedDepratmentsList:string[] = [];
-  constructor(private db: AngularFirestore, private route: Router,private meetingService: MeetingService, private confirmationService: ConfirmationService) {
+  constructor(private db: AngularFirestore, private route: Router,private meetingService: MeetingService, private confirmationService: ConfirmationService,private authorizationService: AuthorizationServiceService) {
+    this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
+      this.loggedInUserDataFromDB = data;
+      //console.log("in nav bar",this.loggedInUserDataFromDB);
+    });
+    if(this.loggedInUserDataFromDB!=null){
+    this.createMeetingModelObject.facilitatedBy=this.loggedInUserDataFromDB.emailId;
+    //console.log(this.createMeetingModelObject.facilitatedBy);
+    }
+    db.collection("Users").valueChanges().subscribe(data=>
+      {
+        //console.log(data);
+        for(let i=0; i<data.length;i++){
+          if(data[i]['Role']=='Chair'){
+            this.chairs.push(data[i]['emailId']);
+          }
+        }
+      });
     this.createMeetingModelObject.inlineCheckbox1 = true;
     this.onCheck(null);
   }

@@ -68,8 +68,10 @@
     
     <div class="form-group">
       <label for="exampleFormControlInput1">Facilitated By</label>
-      <input required #facilitatedBy="ngModel" [(ngModel)]="createMeetingModelObject.facilitatedBy" name="facilitatedBy" type="text" class="form-control"
+      <select required #facilitatedBy="ngModel" [(ngModel)]="createMeetingModelObject.facilitatedBy" name="facilitatedBy" type="text" class="form-control"
         id="exampleFormControlInput1" placeholder="Input Facilitator">
+        <option *ngFor="let chair of chairs" [value]="chair">{{chair}}</option>
+      </select>
     </div>
     <div class="alert alert-danger"
     *ngIf="(facilitatedBy.touched && !facilitatedBy.valid)">*Facilitated by is required

@@ -197,7 +197,7 @@ export class DetailedMeetingComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to delete this record?',
       accept: () => { 
-    this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).delete()
+    this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).delete()
       .then(function () {
         console.log("Document Successfull deleted!");
       }).catch(
@@ -205,7 +205,7 @@ export class DetailedMeetingComponent implements OnInit {
           console.error("Error removing document:", error);
         }
       );
-    this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).delete()
+      this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).delete()
       .then(function () {
         console.log("Document Successfull deleted!");
       }).catch(

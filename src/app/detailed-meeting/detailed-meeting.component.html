@@ -85,6 +85,17 @@
           <button [disabled]="selectedMeeting.finalised" (click)=updatingAttendanceToDataBase()>Save Attendance</button>
           <h6>Attendees:</h6>
           <p *ngFor="let attendee of selectedMeeting.attendees ; index as i">{{i+1}}. {{attendee}}</p>
+          <!-----------------------------------------------
+          <ng-multiselect-dropdown-angular7 
+          [data]="dataForAttendance" 
+          [(ngModel)]="selectedMeeting.attendees" 
+          [settings]="dropDownSettings"
+          (onSelect)="onItemSelect($event)"
+          (onSelectAll)="onSelectAll($event)">
+
+            </ng-multiselect-dropdown-angular7>-->
+              
+          
           <!--<p-multiSelect [options]="dataForAttendance" [(ngModel)]="selectedMeeting.attendees" [panelStyle]="{minWidth:'12em'}">
             <ng-template let-value pTemplate="selectedItems">
                 <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">

@@ -109,6 +109,7 @@ console.log(this.items);
         //storing document id of AgendaList in a variable.
         this.createMeetingModelObject.documentIdOfAgendaListCollection =
           docref.id;
+          //this.db.collection("AgendaList").doc(docref.id).update({documentIdOfAgendaListCollection:docref.id});
       });
     //saving to Meetings collection
     this.db
@@ -130,6 +131,8 @@ console.log(this.items);
         comments: {}
       })
       .then(ref => {
+        this.db.collection("AgendaList").doc(this.createMeetingModelObject.documentIdOfAgendaListCollection)
+          .update({documentIdOfCurrentMeeting:ref.id, documentIdOfAgendaListCollection:this.createMeetingModelObject.documentIdOfAgendaListCollection});
         this.db
           .collection("Meetings")
           .doc(ref.id)
@@ -138,6 +141,7 @@ console.log(this.items);
               .documentIdOfAgendaListCollection,
             documentIdOfCurrentMeeting: ref.id
           });
+          
       });
     
     //formatting whole form to empty

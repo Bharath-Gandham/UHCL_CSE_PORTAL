@@ -34,6 +34,7 @@ export class DetailedMeetingComponent implements OnInit {
   comment: any;
   downloadURL: any;
   dataForAttendance=[];
+  comments= [];
   //attendees:string[]=[];
   //allSelected: any;
   constructor(private meetingService: MeetingService, private storage: AngularFireStorage, private route: Router, private db: AngularFirestore, private authorizationService: AuthorizationServiceService, private confirmationService: ConfirmationService, private http:HttpClient, private sanitizer:DomSanitizer, private fileService:FileService) {
@@ -105,14 +106,16 @@ export class DetailedMeetingComponent implements OnInit {
     this.rejectClicked = false;
     if (!this.selectedMeeting.rejects.some((item) => item == this.loggedInUserDataFromDB.emailId)) {
       this.selectedMeeting.rejects.push(this.loggedInUserDataFromDB.emailId);
+      
     }
     if (this.selectedMeeting.approvals.some((item) => item == this.loggedInUserDataFromDB.emailId)) {
       this.selectedMeeting.approvals.splice(this.selectedMeeting.approvals.indexOf(this.loggedInUserDataFromDB.emailId), 1);
     }
-
-    this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).update({ comments: { [this.loggedInUserDataFromDB.emailId]: this.comment }, rejects: this.selectedMeeting.rejects, approvals: this.selectedMeeting.approvals })
+    this.selectedMeeting.comments.push([this.loggedInUserDataFromDB.emailId] +'-->'+this.comment);
+    this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).update({ comments: this.selectedMeeting.comments, rejects: this.selectedMeeting.rejects, approvals: this.selectedMeeting.approvals })
   }
 });
+
   }
   cancelCommentSection() {
     this.rejectClicked = false;

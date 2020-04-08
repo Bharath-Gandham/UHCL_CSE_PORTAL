@@ -20,7 +20,7 @@ export class CreateMeetingModel{
     inlineCheckbox5:boolean;
     approvals:any[];
     rejects:any[];
-    comments:any;
+    comments:any=[];
     documentIdOfCurrentMeeting:string;
     finalised:boolean;
     files:string[];

@@ -11,7 +11,7 @@
           <a class="nav-link" routerLink="">Home <span class="sr-only">(current)</span></a>
         </li>
         <div  *ngIf="loggedInUserDataFromDB!=null">
-        <li *ngIf="loggedInUserDataFromDB.Role=='Admin'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <li *ngIf="loggedInUserDataFromDB.Role=='Admin' " class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
           <a class="nav-link" routerLink="/Users">Users</a>
         </li>
       </div>

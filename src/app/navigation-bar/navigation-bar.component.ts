@@ -13,7 +13,7 @@ export class NavigationBarComponent implements OnInit {
   provider : firebase.auth.OAuthProvider
   user:any = null;
   userEmail:string=null;
-  loggedInUserDataFromDB:string=null;
+  loggedInUserDataFromDB:any=null;
   constructor(private auth:AngularFireAuth, private authservice:MsalService, private db:AngularFirestore, private authorizationService:AuthorizationServiceService) { 
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
       this.loggedInUserDataFromDB = data;

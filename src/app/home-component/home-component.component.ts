@@ -6,7 +6,7 @@ import { AuthorizationServiceService } from '../Services/authorization-service.s
   styleUrls: ['./home-component.component.css']
 })
 export class HomeComponentComponent implements OnInit {
-  loggedInUserDataFromDB:string=null;
+  loggedInUserDataFromDB:any=null;
   constructor(private authorizationService:AuthorizationServiceService) { 
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
       this.loggedInUserDataFromDB = data;

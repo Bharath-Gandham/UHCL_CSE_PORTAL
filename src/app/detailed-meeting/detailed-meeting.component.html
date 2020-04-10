@@ -43,6 +43,7 @@
     </div>
     <div *ngIf="loggedInUserDataFromDB.Role=='Chair'">
         <button [disabled]="selectedMeeting.finalised" (click)=showAddMeetingMinutesForm()>Save meeting minutes</button>
+        <button [disabled]="selectedMeeting.finalised" (click)=saveMeetingMinutesAndSendEmail()>Save and Send Email</button>
         <button [disabled]="selectedMeeting.finalised" (click)=finaliseMeetingMinutes() class="btn btn-primary">Finalise</button>
     </div>
         <h6>Approvals:{{selectedMeeting.approvals.length}} Rejects:{{selectedMeeting.rejects.length}}</h6>

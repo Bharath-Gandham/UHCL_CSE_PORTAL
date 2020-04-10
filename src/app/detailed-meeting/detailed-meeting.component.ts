@@ -66,6 +66,12 @@ export class DetailedMeetingComponent implements OnInit {
     this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).update({ wholeAgendaList: this.agendaList });
     //this.route.navigate(['AddMeetingMinutes']);
   }
+  saveMeetingMinutesAndSendEmail(){
+    this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).update({wholeAgendaList: this.agendaList,saveMeetingMinutesAndSendEmail:true});
+    this.db.collection("AgendaList").doc(this.selectedMeeting.documentIdOfAgendaListCollection).update({saveMeetingMinutesAndSendEmail:false});
+
+
+  }
   finaliseMeetingMinutes() {
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to Finalise this Meeting?(You cannot perform any action like edit and delete anymore)',

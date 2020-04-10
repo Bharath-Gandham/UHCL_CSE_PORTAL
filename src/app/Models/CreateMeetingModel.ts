@@ -26,6 +26,7 @@ export class CreateMeetingModel{
     files:string[];
     operation:string;
     attendees:string[]=[];
+    saveMeetingMinutesAndSendEmail:boolean;
   //downloadFiles:any;
   downloadFiles: any[] = [
     {

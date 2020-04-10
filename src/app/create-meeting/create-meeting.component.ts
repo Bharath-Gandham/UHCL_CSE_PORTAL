@@ -104,7 +104,7 @@ console.log(this.items);
     //saving to AgendaList collection
     this.db
       .collection("AgendaList")
-      .add({ wholeAgendaList: this.items })
+      .add({ wholeAgendaList: this.items,saveMeetingMinutesAndSendEmail:false})
       .then(docref => {
         //storing document id of AgendaList in a variable.
         this.createMeetingModelObject.documentIdOfAgendaListCollection =
@@ -128,7 +128,7 @@ console.log(this.items);
         files:[],
         attendees:[],
         downloadFiles:[],
-        comments: {}
+        comments: []
       })
       .then(ref => {
         this.db.collection("AgendaList").doc(this.createMeetingModelObject.documentIdOfAgendaListCollection)

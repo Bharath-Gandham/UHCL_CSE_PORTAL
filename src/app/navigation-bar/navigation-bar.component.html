@@ -20,6 +20,11 @@
           <a class="nav-link" routerLink="/MeetingsList">Meetings</a>
         </li>
       </div>
+      <div  *ngIf="loggedInUserDataFromDB!=null">
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link" routerLink="/Admissions">Admissions</a>
+        </li>
+      </div>
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <div  *ngIf="loggedInUserDataFromDB!=null">

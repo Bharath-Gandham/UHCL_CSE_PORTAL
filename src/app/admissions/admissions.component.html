@@ -1,0 +1,188 @@
+<button type="button" class="btn btn-primary float-right" (click)="addStudentApplication()">Add Application</button>
+<!--Add student admission application form-->
+<div class="m-5 card">
+    <form class="m-5" *ngIf="showAddStudentApplicationForm">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="">First and last name</span>
+            </div>
+            <input required #firstName="ngModel" [(ngModel)]="admissionsModelObject.firstName" name="firstName"
+                type="text" class="form-control">
+            <input required #lastName="ngModel" [(ngModel)]="admissionsModelObject.lastName" name="lastName" type="text"
+                class="form-control">
+        </div>
+        <div class="alert alert-danger"
+            *ngIf="(firstName.touched && !firstName.valid)||(lastName.touched && !lastName.valid)">*First and last names
+            are
+            required</div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Student Id</label>
+            <input required #studentId="ngModel" [(ngModel)]="admissionsModelObject.studentId" name="studentId"
+                type="number" class="form-control" id="exampleFormControlInput1" placeholder="7 digit student Id">
+            <div class="alert alert-danger" *ngIf="(studentId.touched && !studentId.valid)">*Student Id is required
+            </div>
+            <!--Use this for validating already taken student ID-->
+            <!--<div class="alert alert-danger" *ngIf="studentId.touched && usersEmailIdsForValidation.includes(addUserObject.email)">*Email id is already taken</div>-->
+        </div>
+        <div class="form-group">
+            <div class='row'>
+                <div class='col-md-3'>
+                    <label for="exampleFormControlSelect1">GRE Verbal:</label>
+                    <select required #greVerbalScore="ngModel" [(ngModel)]="admissionsModelObject.greVerbalScore"
+                        name="greVerbalScore" class="form-control" id="exampleFormControlSelect1">
+                        <option *ngFor="let greVerbalScore of greVerbalPossibleScore">{{greVerbalScore}}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="(greVerbalScore.touched && !greVerbalScore.valid)">
+                        *GRE Verbal score is required
+                    </div>
+                </div>
+                <div class='col-md-3'>
+                    <label for="exampleFormControlSelect1">GRE Quant:</label>
+                    <select required #greQuantScore="ngModel" [(ngModel)]="admissionsModelObject.greQuantScore"
+                        name="greQuantScore" class="form-control" id="exampleFormControlSelect1">
+                        <option *ngFor="let greQuantScore of greVerbalPossibleScore">{{greQuantScore}}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="(greQuantScore.touched && !greQuantScore.valid)">
+                        *GRE Quant score is required
+                    </div>
+                </div>
+                <div class='col-md-3'>
+                    <label for="exampleFormControlSelect1">GRE Total:</label>
+                    <input required #greTotalScore="ngModel" [(ngModel)]="admissionsModelObject.greTotalScore"
+                        name="greTotalScore" type="number" class="form-control" id="exampleFormControlInput1"
+                        placeholder="total GRE"
+                        [value]="+(admissionsModelObject.greQuantScore)++(admissionsModelObject.greVerbalScore)">
+                    <!-- <select required #greTotalScore="ngModel" [(ngModel)]="admissionsModelObject.greTotalScore"
+                        name="greTotalScore" class="form-control" id="exampleFormControlSelect1"
+                        [value]="+(admissionsModelObject.greQuantScore)++(admissionsModelObject.greVerbalScore)"
+                        >
+                        <option *ngFor="let greTotalScore of greTotalPossibleScore" [selected]="295">{{greTotalScore}}</option>
+                    </select> -->
+                    <div class="alert alert-danger"
+                        *ngIf="greTotalScore.valid && +(admissionsModelObject.greTotalScore)!=+(admissionsModelObject.greQuantScore)++(admissionsModelObject.greVerbalScore)">
+                        *Invalid GRE Total. Total must be Verbal+Quant
+                    </div>
+                </div>
+                <div class='col-md-3'>
+                    <label for="exampleFormControlSelect1">GRE Essay:</label>
+                    <select required #greEssayScore="ngModel" [(ngModel)]="admissionsModelObject.greEssayScore"
+                        name="greEssayScore" class="form-control" id="exampleFormControlSelect1">
+                        <option *ngFor="let greEssayScore of greEssayPossibleScore">{{greEssayScore}}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="(greEssayScore.touched && !greEssayScore.valid)">
+                        *GRE Essay score is required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='form-group'>
+            <div class='row'>
+                <div class='col-md-8'>
+                    <label>Intended Program</label>
+                    <select required #intendedProgram='ngModel' [(ngModel)]='admissionsModelObject.intendedProgram'
+                        name='intendedProgram' class="form-control" id="exampleFormControlSelect1">
+                        <option *ngFor="let intendedProgram of ['CS','CIS','IT','DS']">{{intendedProgram}}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="intendedProgram.touched && !intendedProgram.valid">
+                        *Program is mandatory
+                    </div>
+                </div>
+                <div class='col-md-4'>
+                    <label>GPA</label>
+                    <input required #gpa="ngModel" [(ngModel)]="admissionsModelObject.gpa" name="gpa" type="number"
+                        class="form-control" id="exampleFormControlInput1" placeholder="0.00">
+                    <div class="alert alert-danger" *ngIf="(gpa.touched && !gpa.valid)">*GPA is required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='form-group'>
+            <label>Intended Validators</label>
+            <select multiple required #intendedValidators='ngModel'
+                [(ngModel)]='admissionsModelObject.intendedValidators' name='intendedValidators' class='form-control'
+                id="exampleFormControlSelect1">
+                <option *ngFor="let greTotalScore of greTotalPossibleScore" [value]='greTotalScore'>{{greTotalScore}}</option>
+            </select>
+        </div>
+        <div>
+            <input type="file" (change)="uploadFile($event)" accept=".pdf">
+        </div>
+        <button
+            [disabled]="!firstName.valid || !lastName.valid || !studentId.valid || !greVerbalScore.valid || !greQuantScore.valid || !intendedProgram.valid || !gpa.valid || admissionsModelObject.intendedValidators.length<1"
+            class="btn btn-primary" (click)="saveAdmissionApplication()">Save</button>
+        <button class="btn" (click)="cancel()">cancel</button>
+    </form>
+</div>
+
+<!--Listing Data of students-->
+<div class="container-fluid">
+    <div class="container">
+        <mat-form-field class="StyleForSearch">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. First name">
+        </mat-form-field>
+      </div>
+    <table mat-table [dataSource]="applicants" matSort class="datatable mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="Action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+            <td mat-cell *matCellDef="let element"> <i class=" m-2 fas fa-user-edit"
+                    (click)="editButtonClicked(element)"></i>
+                <i class="m-2 far fa-trash-alt" (click)="deleteApplication(element)"></i></td>
+        </ng-container>
+        <!-- studentId Column -->
+        <ng-container matColumnDef="studentId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Student Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.studentId}} </td>
+        </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="greVerbalScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Verbal </th>
+            <td mat-cell *matCellDef="let element"> {{element.greVerbalScore}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="greQuantScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Quant </th>
+            <td mat-cell *matCellDef="let element"> {{element.greQuantScore}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="greTotalScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+            <td mat-cell *matCellDef="let element"> {{element.greTotalScore}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="greEssayScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Essay </th>
+            <td mat-cell *matCellDef="let element"> {{element.greEssayScore}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="intendedProgram">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Program </th>
+            <td mat-cell *matCellDef="let element"> {{element.intendedProgram}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="gpa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> GPA </th>
+            <td mat-cell *matCellDef="let element"> {{element.gpa}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

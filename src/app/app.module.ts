@@ -50,6 +50,7 @@ import { AddMeetingMinutesComponent } from './add-meeting-minutes/add-meeting-mi
 import {MsalModule, MsalGuard} from '@azure/msal-angular';
 import { FileService } from './Services/file.service';
 import { NoaccessComponent } from './noaccess/noaccess.component';
+import { AdmissionsComponent } from './admissions/admissions.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +61,8 @@ import { NoaccessComponent } from './noaccess/noaccess.component';
     MeetingsListComponent,
     DetailedMeetingComponent,
     AddMeetingMinutesComponent,
-    NoaccessComponent
+    NoaccessComponent,
+    AdmissionsComponent
   ],
   imports: [
     
@@ -115,6 +117,7 @@ import { NoaccessComponent } from './noaccess/noaccess.component';
       {path:'DetailedMeeting',component:DetailedMeetingComponent,canActivate: [MsalGuard]},
       {path:'MeetingsList',component:MeetingsListComponent,canActivate: [MsalGuard]},
       {path:'CreateMeeting',component:CreateMeetingComponent,canActivate: [MsalGuard]},
+      {path:'Admissions',component:AdmissionsComponent},
       {path:'NoAccess',component:NoaccessComponent}
     ])
   ],

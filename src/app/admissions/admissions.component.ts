@@ -1,3 +1,4 @@
+import { AngularFireStorage } from '@angular/fire/storage';
 import { element } from 'protractor';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Component, OnInit,ViewChild } from '@angular/core';
@@ -5,6 +6,10 @@ import { AdmissionsModel } from '../Models/AdmissionsModel';
 import { AuthorizationServiceService } from '../Services/authorization-service.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
+import {ConfirmationService} from 'primeng/api';
+import { FileService } from '../Services/file.service';
+import { AdmissionsService } from '../Services/admissions.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-admissions',
   templateUrl: './admissions.component.html',
@@ -23,7 +28,7 @@ greEssayPossibleScore=[];
   displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa'];
   editClicked: boolean;
   tempStudent: any;
-  constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService) {
+  constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService,private storage: AngularFireStorage,private confirmationService: ConfirmationService,private fileService:FileService, private admissionsService:AdmissionsService, private route:Router) {
     this.showAddStudentApplicationForm=false;
     for(let i=130; i<171;i++){
       this.greVerbalPossibleScore.push(i);
@@ -47,8 +52,56 @@ greEssayPossibleScore=[];
     this.showAddStudentApplicationForm=true;
   }
   uploadFile(event){
+    console.log(event.target.files[0]);
+    var timeStamp = Math.floor(Date.now() / 1000).toString(20);
+    var randomId = Math.random().toString(36).substring(2);
+    randomId = randomId + timeStamp;
+    // randomId=randomId+
+    this.storage.upload(randomId, event.target.files[0]).snapshotChanges().subscribe(data => {
+      //console.log("console.log",data);
+      this.storage.ref(randomId).getDownloadURL().subscribe(data=>{
+        if(data!=null){
+          let downloadUrl = data;
+          //this.selectedMeeting.downloadFiles[randomId]=downloadUrl;
+          //console.log(this.selectedMeeting.downloadFiles);
+          this.admissionsModelObject.downloadApplications.push({
+            uniqueNameForReference:randomId,
+            linkToView:downloadUrl,
+            nameOfFileAsUploaded:event.target.files[0].name,
+            typeOfFile:event.target.files[0].type
+          })
+        }
+      });
+    });
 
   }
+  open(url){
+    window.open(url,"_blank");
+  }
+  deleteFile(ref1,i){
+    this.confirmationService.confirm({
+      message: 'Are you sure, do you want to delete this File?',
+      header:ref1,
+      accept: () => { 
+    //console.log(ref1,i);
+    var deleteRef = this.storage.ref(ref1)
+
+    // Delete the file
+    deleteRef.delete()
+    //this.selectedMeeting.downloadFiles.
+    //const index: number = this.selectedMeeting.downloadFiles.indexOf(ref1);
+     if (i !== -1) {
+     this.admissionsModelObject.downloadApplications.splice(i, 1);
+     
+     }
+    //this.db.collection("Meetings").doc(this.selectedMeeting.documentIdOfCurrentMeeting).update({ downloadFiles: this.selectedMeeting.downloadFiles });
+  }
+});
+
+  }
+  downloadFile(uniqueNameForReference,linkToView,typeOfFile){
+    this.fileService.setHttpRequestToDownloadFile(uniqueNameForReference,linkToView,typeOfFile); 
+     }
   saveAdmissionApplication(){
     //console.log(typeof(this.admissionsModelObject.studentId));
     this.admissionsModelObject.greTotalScore=+(this.admissionsModelObject.greVerbalScore) + +(this.admissionsModelObject.greQuantScore);
@@ -64,9 +117,14 @@ greEssayPossibleScore=[];
       gpa:this.admissionsModelObject.gpa,
       intendedValidators:this.admissionsModelObject.intendedValidators,
       uploadedBy:this.loggedInUserDataFromDB.emailId,
-      date:Date.now()
+      date:Date.now(),
+      accepts:this.admissionsModelObject.accepts,
+      rejects:this.admissionsModelObject.rejects,
+      comments:[],
+      status:"Sent for Evaluation",
+      downloadApplications:this.admissionsModelObject.downloadApplications
     })
-    
+
     this.showAddStudentApplicationForm=false;
     this.admissionsModelObject=new AdmissionsModel();
   }
@@ -97,8 +155,12 @@ greEssayPossibleScore=[];
     const filterValue = (event.target as HTMLInputElement).value;
     this.applicants.filter = filterValue.trim().toLowerCase();
   }
+  getPresentStudentDetails(presentStudent){
+    this.admissionsService.setDataFromAdmissionsList(presentStudent)
+    this.route.navigate(['DetailedAdmission']);
+  }
   ngOnInit() {
-    
+    //this.applicants.sort = this.sort;
   }
 
 }

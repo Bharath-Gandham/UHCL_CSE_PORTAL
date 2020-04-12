@@ -10,6 +10,10 @@ export class AdmissionsModel{
     intendedProgram:string;
     date:string;
     intendedValidators=[];
+    downloadApplications=[];
+    accepts=[];
+    rejects=[];
+    comments=[];
     constructor(){
        
 

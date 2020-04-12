@@ -1,0 +1,21 @@
+<div  class='container-fluid' *ngIf="selectedStudent!=null">
+<p><b>Student name:</b> {{selectedStudent.firstName}} {{selectedStudent.lastName}}</p>
+<p><b>Student Id:</b> {{selectedStudent.studentId}}</p>
+<p><b>GRE-verbal Score:</b> {{selectedStudent.greVerbalScore}}</p>
+<p><b>GRE-Quant Score:</b> {{selectedStudent.greQuantScore}}</p>
+<p><b>GRE-Total Score:</b> {{selectedStudent.greTotalScore}}</p>
+<p><b>GRE-Essay Score:</b> {{selectedStudent.greEssayScore}}</p>
+<p><b>Intended Program:</b> {{selectedStudent.intendedProgram}}</p>
+<p><b>GPA:</b>{{selectedStudent.gpa}}</p>
+<p><b>Status:</b> {{selectedStudent.status}}</p>
+<p><b>Files Available:</b></p>
+<p *ngFor="let file of selectedStudent.downloadApplications; index as i">
+    {{i+1}}.{{file.nameOfFileAsUploaded}}: Click <a style="color:#0000FF;" (click)=open(file.linkToView)>here</a> to view
+                <i class="fas fa-file-download ml-3" (click)=downloadFile(file.uniqueNameForReference,file.linkToView,file.typeOfFile)></i>
+</p>
+<p>Accepts:{{selectedStudent.accepts.length}} Rejects:{{selectedStudent.rejects.length}}</p>
+<button (click)="acceptAdmission()">Accept</button><button (click)="rejectAdmission()">Reject</button>
+<textarea *ngIf="showCommentSection" rows="4" [(ngModel)]="commentText"></textarea>
+<p>Comments:</p>
+<p *ngFor="let comment of selectedStudent.comments">{{comment.commentedBy}}{{comment.comment}}</p>
+</div>

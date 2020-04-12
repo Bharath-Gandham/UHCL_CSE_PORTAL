@@ -105,6 +105,11 @@
             </select>
         </div>
         <div>
+            <div *ngFor="let file of admissionsModelObject.downloadApplications ;index as i">
+                {{i+1}}.{{file.nameOfFileAsUploaded}}: Click<a style="color:#0000FF;" (click)=open(file.linkToView)>here</a> to view
+                <i (click)=deleteFile(file.uniqueNameForReference,i) class="far fa-times-circle"></i>
+                <i class="fas fa-file-download ml-3" (click)=downloadFile(file.uniqueNameForReference,file.linkToView,file.typeOfFile)></i>
+            </div>
             <input type="file" (change)="uploadFile($event)" accept=".pdf">
         </div>
         <button
@@ -113,9 +118,9 @@
         <button class="btn" (click)="cancel()">cancel</button>
     </form>
 </div>
-
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
 <!--Listing Data of students-->
-<div class="container-fluid">
+<div [hidden]='showAddStudentApplicationForm' class="container-fluid">
     <div class="container">
         <mat-form-field class="StyleForSearch">
           <mat-label>Search</mat-label>
@@ -183,6 +188,6 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getPresentStudentDetails(row)"></tr>
     </table>
 </div>

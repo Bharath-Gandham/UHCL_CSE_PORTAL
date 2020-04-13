@@ -136,7 +136,7 @@
         <ng-container matColumnDef="Action">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
             <td mat-cell *matCellDef="let element"> <i class=" m-2 fas fa-user-edit"
-                    (click)="editButtonClicked(element)"></i>
+                    (click)="$event.preventDefault(); $event.stopPropagation(); editButtonClicked(element)"></i>
                 <i class="m-2 far fa-trash-alt" (click)="deleteApplication(element)"></i></td>
         </ng-container>
         <!-- studentId Column -->

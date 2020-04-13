@@ -14,6 +14,7 @@ export class AdmissionsModel{
     accepts=[];
     rejects=[];
     comments=[];
+    rejectionReasonsFromModel={};
     constructor(){
        
 

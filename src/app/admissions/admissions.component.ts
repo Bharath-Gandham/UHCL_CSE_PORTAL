@@ -122,6 +122,7 @@ greEssayPossibleScore=[];
       rejects:this.admissionsModelObject.rejects,
       comments:[],
       status:"Sent for Evaluation",
+      rejectionReasonsFromModel:{},
       downloadApplications:this.admissionsModelObject.downloadApplications
     })
 

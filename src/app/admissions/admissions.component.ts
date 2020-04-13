@@ -22,10 +22,11 @@ greVerbalPossibleScore=[];
 greTotalPossibleScore=[];
 greEssayPossibleScore=[];
   loggedInUserDataFromDB: any;
+  studentIdsForValidation=[];
   applicants: MatTableDataSource<any>;
   
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa'];
+  displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa','status'];
   editClicked: boolean;
   tempStudent: any;
   constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService,private storage: AngularFireStorage,private confirmationService: ConfirmationService,private fileService:FileService, private admissionsService:AdmissionsService, private route:Router) {
@@ -45,6 +46,10 @@ greEssayPossibleScore=[];
     this.db.collection("Admissions").valueChanges().subscribe(snap=>{
       this.applicants=new MatTableDataSource(snap);
       this.applicants.sort = this.sort;
+      for(let i=0;i<snap.length;i++){
+        this.studentIdsForValidation.push(snap[i]['studentId']);
+      }
+      
     });
     
    }
@@ -82,7 +87,7 @@ greEssayPossibleScore=[];
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to delete this File?',
       header:ref1,
-      accept: () => { 
+      accept: () => {
     //console.log(ref1,i);
     var deleteRef = this.storage.ref(ref1)
 
@@ -142,6 +147,10 @@ greEssayPossibleScore=[];
 
   }
   deleteApplication(element){
+    this.confirmationService.confirm({
+      message: 'Are you sure, do you want to delete this Student Application?',
+      header:`${element.studentId}`,
+      accept: () => { 
     this.db.collection('Admissions').doc(`${element.studentId}`).delete()
     .then(function(){
       console.log("Document Successfull deleted!");
@@ -150,7 +159,8 @@ greEssayPossibleScore=[];
         console.error("Error removing document:",error);
       }
     );
-
+  }
+});
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

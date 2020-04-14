@@ -6,6 +6,7 @@ export class User{
     fullName:string;
     id:number;
     department:string;
+    admissionApplicationReviewer:boolean;
     constructor(){
        
 

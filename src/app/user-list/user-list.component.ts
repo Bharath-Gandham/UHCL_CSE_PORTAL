@@ -29,22 +29,25 @@ export class UserListComponent implements OnInit {
   //Below is for database coulmn names
   displayedColumns: string[] = ['Action','firstName', 'lastName', 'Role', 'emailId','department'];
   addUserObject=new User();
-  loggedInUserDataFromDB: any= null;
+  loggedInUserDataFromDB: any= {};
   constructor (private db:AngularFirestore,private confirmationService: ConfirmationService,private authorizationService: AuthorizationServiceService){
     //this.users = new MatTableDataSource(this.dataq);
     //this.users.sort = this.sort;
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
+      if(data!=null){
       this.loggedInUserDataFromDB = data;
+      }
       //console.log("in nav bar",this.loggedInUserDataFromDB);
     });
     db.collection("Users").valueChanges().subscribe(data=>
       {
         console.log(data);
+        this.users=new MatTableDataSource(data);
+        this.users.sort = this.sort;
         for(let i=0;i<data.length;i++){
           this.usersEmailIdsForValidation.push(data[i]['emailId'])
         }
-        this.users=new MatTableDataSource(data);
-        this.users.sort = this.sort;
+        
     });
   
   }
@@ -54,7 +57,8 @@ export class UserListComponent implements OnInit {
   }
   submitToSaveUser(){
   this.showAddUserForm=!this.showAddUserForm;
- this.db.collection("Users").doc(this.addUserObject.email).set({firstName:this.addUserObject.firstName,lastName:this.addUserObject.lastName,emailId:this.addUserObject.email,department:this.addUserObject.department,Role:this.addUserObject.role}).then(error => console.log(error));
+  console.log("hc",this.addUserObject.admissionApplicationReviewer);
+ this.db.collection("Users").doc(this.addUserObject.email).set({firstName:this.addUserObject.firstName,lastName:this.addUserObject.lastName,emailId:this.addUserObject.email,department:this.addUserObject.department,Role:this.addUserObject.role,admissionApplicationReviewer:this.addUserObject.admissionApplicationReviewer}).then(error => console.log(error));
  
  if(this.editClicked==true){
  if(this.tempUser.emailId!=this.addUserObject.email){
@@ -73,6 +77,7 @@ export class UserListComponent implements OnInit {
     this.addUserObject.email=presentUser.emailId;
     this.addUserObject.firstName=presentUser.firstName;
     this.addUserObject.lastName=presentUser.lastName;
+    this.addUserObject.admissionApplicationReviewer=presentUser.admissionApplicationReviewer;
     this.showAddUserForm=true;
   }
   /*updateButtonClicked(){

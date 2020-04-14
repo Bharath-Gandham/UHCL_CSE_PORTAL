@@ -1,5 +1,5 @@
-<div *ngIf="loggedInUserDataFromDB!=null">
-<div *ngIf="loggedInUserDataFromDB.Role=='Admin'">
+<div [ngClass]='loggedInUserDataFromDB!=null ? "visible": "hidden" '>
+<div [hidden]="loggedInUserDataFromDB.Role!='Admin'">
 <button type="button" class="btn btn-primary float-right" (click)="addUser()">Add user</button>
 
 <!--<div class="card" style="width: 38rem;" *ngFor="let user of users">
@@ -11,7 +11,7 @@
       </li> 
     </ul>
   </div>-->
-<div *ngIf="!showAddUserForm" class="container-fluid">
+<div [hidden]="showAddUserForm" class="container-fluid">
   <div class="container">
     <mat-form-field class="StyleForSearch">
       <mat-label>Search</mat-label>
@@ -97,6 +97,10 @@
         <option *ngFor="let role of roles">{{role}}</option>
       </select>
       <div class="alert alert-danger" *ngIf="(role.touched && !role.valid)">*Role is required</div>
+    </div>
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="exampleCheck1" [(ngModel)]="addUserObject.admissionApplicationReviewer" name="admissionApplicationReviewer">
+      <label class="form-check-label" for="exampleCheck1">Check if User is a Admission Application Reviewer</label>
     </div>
     <div class="form-group">
       <label for="exampleFormControlSelect1">Department</label>

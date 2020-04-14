@@ -21,7 +21,7 @@
         </li>
       </div>
       <div  *ngIf="loggedInUserDataFromDB!=null">
-        <li *ngIf="loggedInUserDataFromDB.Role=='Admission'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <li *ngIf="loggedInUserDataFromDB.Role=='Admission' || loggedInUserDataFromDB.admissionApplicationReviewer==true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
           <a class="nav-link" routerLink="/Admissions">Admissions</a>
         </li>
       </div>

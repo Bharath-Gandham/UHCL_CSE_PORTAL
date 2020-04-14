@@ -21,7 +21,7 @@ showAddStudentApplicationForm:boolean;
 greVerbalPossibleScore=[];
 greTotalPossibleScore=[];
 greEssayPossibleScore=[];
-  loggedInUserDataFromDB: any;
+  loggedInUserDataFromDB: any={};
   studentIdsForValidation=[];
   applicants: MatTableDataSource<any>;
   
@@ -39,7 +39,9 @@ greEssayPossibleScore=[];
       this.greEssayPossibleScore.push(j);
     }
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
+      if(data!=null){
       this.loggedInUserDataFromDB = data;
+    }
       //console.log("in nav bar",this.loggedInUserDataFromDB);
       
     });
@@ -120,7 +122,7 @@ greEssayPossibleScore=[];
       greEssayScore:this.admissionsModelObject.greEssayScore,
       intendedProgram:this.admissionsModelObject.intendedProgram,
       gpa:this.admissionsModelObject.gpa,
-      intendedValidators:this.admissionsModelObject.intendedValidators,
+      //intendedValidators:this.admissionsModelObject.intendedValidators,
       uploadedBy:this.loggedInUserDataFromDB.emailId,
       date:Date.now(),
       accepts:this.admissionsModelObject.accepts,

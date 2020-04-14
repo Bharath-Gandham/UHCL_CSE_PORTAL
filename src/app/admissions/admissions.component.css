@@ -7,3 +7,12 @@
 th.mat-sort-header-sorted {
     color: black;
   }
+  .styleRedBackGround{
+      background-color: red;
+  }
+  .styleGreenBackGround{
+      background-color: green;
+  }
+  .styleWhiteBackGround{
+      background-color: white;
+  }

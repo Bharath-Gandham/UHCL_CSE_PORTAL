@@ -120,8 +120,8 @@ import { DetailedAdmissionComponent } from './detailed-admission/detailed-admiss
       {path:'DetailedMeeting',component:DetailedMeetingComponent,canActivate: [MsalGuard]},
       {path:'MeetingsList',component:MeetingsListComponent,canActivate: [MsalGuard]},
       {path:'CreateMeeting',component:CreateMeetingComponent,canActivate: [MsalGuard]},
-      {path:'Admissions',component:AdmissionsComponent},
-      {path:'DetailedAdmission',component:DetailedAdmissionComponent},
+      {path:'Admissions',component:AdmissionsComponent,canActivate: [MsalGuard]},
+      {path:'DetailedAdmission',component:DetailedAdmissionComponent,canActivate: [MsalGuard]},
       {path:'NoAccess',component:NoaccessComponent}
     ])
   ],

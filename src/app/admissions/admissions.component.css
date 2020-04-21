@@ -20,3 +20,6 @@ th.mat-sort-header-sorted {
   .styleWhiteBackGround{
       background-color: white;
   }
+  .pointer {
+    cursor: pointer;
+}

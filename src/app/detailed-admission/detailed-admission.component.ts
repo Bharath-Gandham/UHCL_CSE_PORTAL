@@ -36,7 +36,7 @@ export class DetailedAdmissionComponent implements OnInit {
   }
   acceptAdmission(event) {
     this.confirmationService.confirm({
-      message: 'Are you sure, do you want to Accept Admission? You can provide some optional comments below',
+      message: 'Are you sure, do you want to Accept Admission? You can provide some optional Prerequisities below',
       header: this.selectedStudent.studentId,
       accept: () => {
         this.showRejectOptions = false;
@@ -94,24 +94,24 @@ export class DetailedAdmissionComponent implements OnInit {
       this.db.collection("Admissions").doc(`${this.selectedStudent.studentId}`).update({ comments: this.selectedStudent.comments })
     }
   }
-  rejectAdmission(event) {
+  rejectAdmission() {
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to Reject Admission for this student? You need to select reasons below',
       header: this.selectedStudent.studentId,
       accept: () => {
         this.showCommentSection = false;
-        this.buttonValue = event.srcElement.value;
+        
         this.showRejectOptions = true;
       }
     });
   }
-  saveRejectionReasons() {
+  saveRejectionReasons(event) {
     this.confirmationService.confirm({
       message: 'Are you sure, do you want to Reject Admission for this student?',
       header: this.selectedStudent.studentId,
       accept: () => {
         if (this.rejectClicked == true) {
-
+          this.buttonValue = event.srcElement.value;
           if (!this.selectedStudent.rejects.includes(this.loggedInUserDataFromDB.emailId)) {
             this.selectedStudent.rejects.push(this.loggedInUserDataFromDB.emailId);
 
@@ -120,7 +120,7 @@ export class DetailedAdmissionComponent implements OnInit {
             this.selectedStudent.accepts.splice(this.selectedStudent.accepts.indexOf(this.loggedInUserDataFromDB.emailId), 1);
           }
           //this.selectedStudent.rejects.push(this.loggedInUserDataFromDB.emailId);
-          this.selectedStudent.rejectionReasonsFromModel[this.loggedInUserDataFromDB.emailId] = this.rejectionReasons;
+          this.selectedStudent.rejectionReasonsFromModel[this.loggedInUserDataFromDB.emailId] = this.buttonValue+'-->'+this.rejectionReasons;
           if (this.selectedStudent.rejects.length > 1) {
             this.selectedStudent.status = 'Rejected';
           }

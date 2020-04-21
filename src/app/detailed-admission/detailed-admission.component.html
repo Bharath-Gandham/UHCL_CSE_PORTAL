@@ -17,7 +17,7 @@
 </p>
 <p>Accepts:{{selectedStudent.accepts.length}} Rejects:{{selectedStudent.rejects.length}}</p>
 
-<button *ngIf="loggedInUserDataFromDB.admissionApplicationReviewer==true" (click)="acceptAdmission($event)" value="Any Prerequsities:">Accept</button><button *ngIf="loggedInUserDataFromDB.admissionApplicationReviewer==true" (click)="rejectAdmission($event)" value="Rejection Reason">Reject</button>
+<button *ngIf="loggedInUserDataFromDB.admissionApplicationReviewer==true" (click)="acceptAdmission($event)" value="Accept">Accept</button><button *ngIf="loggedInUserDataFromDB.admissionApplicationReviewer==true" (click)="rejectAdmission()">Reject</button>
 <textarea class='row container-fluid' *ngIf="showCommentSection" rows="4" [(ngModel)]="commentText"></textarea>
 <button *ngIf="showCommentSection" class='row' (click)="saveComment()">Save Comment</button>
 <div *ngIf="showRejectOptions" class='form-group'>
@@ -27,11 +27,10 @@
         id="exampleFormControlSelect10">
         <option *ngFor="let reason of rejectionPossibleReasons" [value]='reason'>{{reason}}</option>
     </select>
-    <button (click)="saveRejectionReasons()">Save Reasons</button>
+    <button (click)="saveRejectionReasons($event)" value="Reject">Save Reasons</button>
 </div>
-<p><b>Comments:(For Acceptance) </b></p>
+<p><b>Comments/Reasons</b></p>
 <p *ngFor="let comment of selectedStudent.comments"><b>{{comment.commentedBy}}: {{comment.decision}}--> </b>{{comment.comment}}</p>
-<p><b>Reasons: (For Rejection)</b></p>
 <p *ngFor="let reason of selectedStudent.rejectionReasonsFromModel | keyvalue"><b>{{reason.key}}: </b>{{reason.value}}</p>
 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
 </div>

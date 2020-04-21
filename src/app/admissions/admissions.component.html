@@ -115,7 +115,7 @@
             <input type="file" (change)="uploadFile($event)" accept=".pdf">
         </div>
         <button
-            [disabled]="!firstName.valid || !lastName.valid || !studentId.valid || !greVerbalScore.valid || !greQuantScore.valid || !intendedProgram.valid || !gpa.valid || admissionsModelObject.intendedValidators.length<1 || studentIdsForValidation.includes(admissionsModelObject.studentId)"
+            [disabled]="!firstName.valid || !lastName.valid || !studentId.valid || !greVerbalScore.valid || !greQuantScore.valid || !intendedProgram.valid || !gpa.valid || studentIdsForValidation.includes(admissionsModelObject.studentId)"
             class="btn btn-primary" (click)="saveAdmissionApplication()">Save</button>
         <button class="btn" (click)="cancel()">cancel</button>
     </form>
@@ -140,6 +140,11 @@
             <td mat-cell *matCellDef="let element"><button [disabled]="loggedInUserDataFromDB.Role!='Admission'"><i class=" m-2 fas fa-user-edit"
                     (click)="$event.preventDefault(); $event.stopPropagation(); editButtonClicked(element)"></i></button>
                <button [disabled]="loggedInUserDataFromDB.Role!='Admission'"><i class="m-2 far fa-trash-alt" (click)=" $event.preventDefault(); $event.stopPropagation(); deleteApplication(element)"></i></button> </td>
+        </ng-container>
+        <!--Date column-->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.date}} </td>
         </ng-container>
         <!-- studentId Column -->
         <ng-container matColumnDef="studentId">
@@ -195,7 +200,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr [ngClass]='row.status=="Rejected" ? "styleRedBackGround" : row.status=="Accepted" ? "styleGreenBackGround" : "styleWhiteBackGround"' mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getPresentStudentDetails(row)"></tr>
+        <tr [ngClass]='row.status=="Rejected" ? "styleRedBackGround" : row.status=="Accepted" ? "styleGreenBackGround" : row.status=="Under Review" ? "styleBrownBackGround" : "styleWhiteBackGround"' mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getPresentStudentDetails(row)"></tr>
     </table>
 </div>
 </div >

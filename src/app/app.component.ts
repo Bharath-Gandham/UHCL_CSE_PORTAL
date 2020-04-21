@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   provider:any;
   user:any=null;
   userEmailThroughWhichHeIsLoggedIn:string=null;
-  title = 'myFirstDemoForFireDB';
+  title = 'UHCL_CSE_PORTAL';
   userDetailsFromDb:any=null
   // firebase.auth().getRedirectResult()
   // .then(function(result) {

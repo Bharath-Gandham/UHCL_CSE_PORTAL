@@ -8,10 +8,14 @@ th.mat-sort-header-sorted {
     color: black;
   }
   .styleRedBackGround{
-      background-color: red;
+      background-color: #ffcccb;
+      
   }
   .styleGreenBackGround{
-      background-color: green;
+      background-color: lightgreen;
+  }
+  .styleBrownBackGround{
+      background-color: #fed8b1;
   }
   .styleWhiteBackGround{
       background-color: white;

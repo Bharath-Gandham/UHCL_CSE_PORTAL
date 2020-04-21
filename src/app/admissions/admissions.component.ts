@@ -10,6 +10,7 @@ import {ConfirmationService} from 'primeng/api';
 import { FileService } from '../Services/file.service';
 import { AdmissionsService } from '../Services/admissions.service';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-admissions',
   templateUrl: './admissions.component.html',
@@ -26,10 +27,10 @@ greEssayPossibleScore=[];
   applicants: MatTableDataSource<any>;
   
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa','status'];
+  displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa','status','date'];
   editClicked: boolean;
   tempStudent: any;
-  constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService,private storage: AngularFireStorage,private confirmationService: ConfirmationService,private fileService:FileService, private admissionsService:AdmissionsService, private route:Router) {
+  constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService,private storage: AngularFireStorage,private confirmationService: ConfirmationService,private fileService:FileService, private admissionsService:AdmissionsService, private route:Router,private datePipe: DatePipe) {
     this.showAddStudentApplicationForm=false;
     for(let i=130; i<171;i++){
       this.greVerbalPossibleScore.push(i);
@@ -46,6 +47,7 @@ greEssayPossibleScore=[];
       
     });
     this.db.collection("Admissions").valueChanges().subscribe(snap=>{
+      //snap=snap.orderBy("date");
       this.applicants=new MatTableDataSource(snap);
       this.applicants.sort = this.sort;
       for(let i=0;i<snap.length;i++){
@@ -112,7 +114,10 @@ greEssayPossibleScore=[];
   saveAdmissionApplication(){
     //console.log(typeof(this.admissionsModelObject.studentId));
     this.admissionsModelObject.greTotalScore=+(this.admissionsModelObject.greVerbalScore) + +(this.admissionsModelObject.greQuantScore);
+    var MMddyyyy = this.datePipe.transform(new Date(),"MM-dd-yyyy");
+    console.log(MMddyyyy);
     this.db.collection('Admissions').doc(`${this.admissionsModelObject.studentId}`).set({
+      date:MMddyyyy,
       firstName:this.admissionsModelObject.firstName,
       lastName:this.admissionsModelObject.lastName,
       studentId:this.admissionsModelObject.studentId,
@@ -124,11 +129,10 @@ greEssayPossibleScore=[];
       gpa:this.admissionsModelObject.gpa,
       //intendedValidators:this.admissionsModelObject.intendedValidators,
       uploadedBy:this.loggedInUserDataFromDB.emailId,
-      date:Date.now(),
       accepts:this.admissionsModelObject.accepts,
       rejects:this.admissionsModelObject.rejects,
       comments:[],
-      status:"Sent for Evaluation",
+      status:"Sent for Review",
       rejectionReasonsFromModel:{},
       downloadApplications:this.admissionsModelObject.downloadApplications
     })

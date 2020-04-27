@@ -25,13 +25,15 @@ greEssayPossibleScore=[];
   loggedInUserDataFromDB: any={};
   studentIdsForValidation=[];
   applicants: MatTableDataSource<any>;
-  
+  statusOptions=['Sent for Review-Color:White','Under Review-Color:Brown','Accepted-Color:Green','Rejected-Color:Red']
+  statusOptions1:any[];
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa','status','date'];
   editClicked: boolean;
   tempStudent: any;
   constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService,private storage: AngularFireStorage,private confirmationService: ConfirmationService,private fileService:FileService, private admissionsService:AdmissionsService, private route:Router,private datePipe: DatePipe) {
     this.showAddStudentApplicationForm=false;
+    this.admissionsModelObject.daysForEmailAlert='2';
     for(let i=130; i<171;i++){
       this.greVerbalPossibleScore.push(i);
       this.greTotalPossibleScore.push(i+130);
@@ -134,7 +136,10 @@ greEssayPossibleScore=[];
       comments:[],
       status:"Sent for Review",
       rejectionReasonsFromModel:{},
-      downloadApplications:this.admissionsModelObject.downloadApplications
+      downloadApplications:this.admissionsModelObject.downloadApplications,
+      dateOfLastEmailSent:Date.now(),
+      //daysForEmailAlert:+(this.admissionsModelObject.daysForEmailAlert)*86400000
+      daysForEmailAlert:this.admissionsModelObject.daysForEmailAlert
     })
 
     this.showAddStudentApplicationForm=false;

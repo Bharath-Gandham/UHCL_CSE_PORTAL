@@ -35,6 +35,7 @@ export class CreateMeetingModel{
       typeOfFile:""
     }
   ];
+  daysForEmailAlert:string;
     constructor(){
        
 

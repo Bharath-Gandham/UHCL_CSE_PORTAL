@@ -114,6 +114,19 @@
     &&!createMeetingModelObject.inlineCheckbox3 && !createMeetingModelObject.inlineCheckbox4
     && !createMeetingModelObject.inlineCheckbox5)">*Program is required
     </div>
+
+    <div class='form-group'>
+      <label>Choose, after how many days you want to send an email alert repeatedly </label>
+      <select required #daysForEmailAlert='ngModel' [(ngModel)]='createMeetingModelObject.daysForEmailAlert'
+      name='daysForEmailAlert' class="form-control" id="exampleFormControlSelect5" >
+      <option *ngFor="let daysForEmailAlert of ['1','2','3','4','5','6','7','8','9','10']">{{daysForEmailAlert}}</option>
+
+      </select>
+      <div class="alert alert-danger" *ngIf="(daysForEmailAlert.touched && !daysForEmailAlert.valid)">*Days for Email Alert is required
+      </div>
+
+</div>
+
     <div class="form-group">
       <label for="exampleFormControlInput1"> Agenda</label>
       <!--Looping into Agenda Main Array-->
@@ -175,7 +188,7 @@
         <button (click)=cancelAgendaItemInput()>Cancel</button>
         
     </div>
-    <button [disabled]="!subject.valid || !date.valid || !HH.valid || !MM.valid || !noon.valid || !facilitatedBy.valid || (!createMeetingModelObject.inlineCheckbox1 && !createMeetingModelObject.inlineCheckbox2
+    <button [disabled]="!subject.valid || !daysForEmailAlert.valid || !date.valid || !HH.valid || !MM.valid || !noon.valid || !facilitatedBy.valid || (!createMeetingModelObject.inlineCheckbox1 && !createMeetingModelObject.inlineCheckbox2
     &&!createMeetingModelObject.inlineCheckbox3 && !createMeetingModelObject.inlineCheckbox4
     && !createMeetingModelObject.inlineCheckbox5)" class="btn btn-primary" (click)="submitToSaveMeeting()">Save</button>
     <button  class="btn" (click)="cancel()">cancel</button>

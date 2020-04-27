@@ -15,6 +15,7 @@ export class AdmissionsModel{
     rejects=[];
     comments=[];
     rejectionReasonsFromModel={};
+    daysForEmailAlert:string;
     constructor(){
        
 

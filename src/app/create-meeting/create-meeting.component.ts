@@ -51,6 +51,7 @@ chairs:any[]=[];
   //subOfSubAgendaItems: any[][];
   //selectedDepratmentsList:string[] = [];
   constructor(private db: AngularFirestore, private route: Router,private meetingService: MeetingService, private confirmationService: ConfirmationService,private authorizationService: AuthorizationServiceService) {
+    this.createMeetingModelObject.daysForEmailAlert='2';
     this.authorizationService.getUserFromAuthorizationServiceObj().subscribe(data => {
       this.loggedInUserDataFromDB = data;
       //console.log("in nav bar",this.loggedInUserDataFromDB);
@@ -128,7 +129,8 @@ console.log(this.items);
         files:[],
         attendees:[],
         downloadFiles:[],
-        comments: []
+        comments: [],
+        daysForEmailAlert:this.createMeetingModelObject.daysForEmailAlert
       })
       .then(ref => {
         this.db.collection("AgendaList").doc(this.createMeetingModelObject.documentIdOfAgendaListCollection)

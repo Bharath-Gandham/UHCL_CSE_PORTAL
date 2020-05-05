@@ -30,7 +30,7 @@ greEssayPossibleScore=[];
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   displayedColumns: string[] = ['Action','studentId','firstName', 'lastName', 'greVerbalScore','greQuantScore','greTotalScore','greEssayScore','intendedProgram','gpa','status','date'];
   editClicked: boolean;
-  tempStudent: any;
+  tempStudent: any={};
   constructor(private db: AngularFirestore,private authorizationService: AuthorizationServiceService,private storage: AngularFireStorage,private confirmationService: ConfirmationService,private fileService:FileService, private admissionsService:AdmissionsService, private route:Router,private datePipe: DatePipe) {
     this.showAddStudentApplicationForm=false;
     this.admissionsModelObject.daysForEmailAlert='2';
@@ -117,7 +117,15 @@ greEssayPossibleScore=[];
     //console.log(typeof(this.admissionsModelObject.studentId));
     this.admissionsModelObject.greTotalScore=+(this.admissionsModelObject.greVerbalScore) + +(this.admissionsModelObject.greQuantScore);
     var MMddyyyy = this.datePipe.transform(new Date(),"MM-dd-yyyy");
-    console.log(MMddyyyy);
+    if(this.editClicked==true){
+      console.log(this.tempStudent.studentId,",",this.admissionsModelObject.studentId);
+      console.log(this.tempStudent.studentId!=this.admissionsModelObject.studentId);
+      if(this.tempStudent.studentId!=this.admissionsModelObject.studentId){
+        this.deleteApplication(this.tempStudent)
+        this.tempStudent={};
+      }
+      this.editClicked=false;
+      }
     this.db.collection('Admissions').doc(`${this.admissionsModelObject.studentId}`).set({
       date:MMddyyyy,
       firstName:this.admissionsModelObject.firstName,
@@ -141,17 +149,20 @@ greEssayPossibleScore=[];
       //daysForEmailAlert:+(this.admissionsModelObject.daysForEmailAlert)*86400000
       daysForEmailAlert:this.admissionsModelObject.daysForEmailAlert
     })
-
+    
+    this.editClicked=false;
     this.showAddStudentApplicationForm=false;
     this.admissionsModelObject=new AdmissionsModel();
   }
   cancel(){
     this.showAddStudentApplicationForm=false;
+    this.editClicked=false;
     this.admissionsModelObject=new AdmissionsModel();
   }
   editButtonClicked(element){
     this.editClicked=true;
     this.tempStudent=element;
+    
     this.admissionsModelObject=element;
     //this.admissionsModelObject.intendedValidators.setValue(element.intendedValidators);
     this.showAddStudentApplicationForm=true;
